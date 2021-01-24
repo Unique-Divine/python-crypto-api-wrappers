@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+**__pycache__**
+
+# jupyter notebook checkpoints
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+.idea
+
+#pyenv
+.python-version
+
+# Large file cleaner
+.git.bfg-report/
+.gitignore.swp
+bfg-1.14.0.jar
+
+# Custom
+.env
+temp/*
+.DS_Store
+

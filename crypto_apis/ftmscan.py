@@ -1,17 +1,17 @@
+import os
 import time
 import logging
 import pandas as pd
-import secret_api_keys
 
 import requests
 
-from typing import Any, Dict, List, Optional, TypedDict, Union
+from typing import Any, Dict, List, TypedDict, Union
 
 
 class FTMScanConnector:
 
-    api_endpoint_preamble = "https://api.ftmscan.com/api?"
-    API_KEY = secret_api_keys.FTMSCAN_API_KEY
+    api_endpoint_preamble: str = "https://api.ftmscan.com/api?"
+    API_KEY: str = os.environ["FTMSCAN_API_KEY"]
 
     def __init__(self, max_api_calls_sec: int = 5):
         self._api_call_sleep_time = 1 / max_api_calls_sec
@@ -83,7 +83,7 @@ class TxReceipt(TypedDict):
     """An Ethereum (Fantom) transaction receipt from the Etherscan (FTMScan) API.
 
     Keys (value_type): 
-        effectiveGasPrice (int): Gas price at the time of the transaction. 
+        gasPrice (int): Gas price at the time of the transaction. 
             A base 16 encoded integer units of Wei.
         gasUsed (int): Gas usage by the transaction. A base 16 encoded integer
             in units of Wei. Thus, `int(gasUsed, base=16)` is an integer.  
@@ -100,34 +100,3 @@ class TxReceipt(TypedDict):
         transactionIndex: Any
         type: Any
     """
-
-
-
-
-def test_connector():
-    ftmscan = FTMScanConnector()
-    address = "0x33e0e07ca86c869ade3fc9de9126f6c73dad105e"
-    balance: float = ftmscan.account_balance_single_address(address=address)
-    assert isinstance(balance, float)
-    assert balance >= 0 
-
-def test_tx_list():
-    ftmscan = FTMScanConnector()
-    address = "0xba821dc848803900C01BA7Ac1D7a034B95B1eD97"
-    tx_receipts: List[TxReceipt] = ftmscan.tx_list(address=address)
-    assert isinstance(tx_receipts, (list))
-
-    if not len(tx_receipts) > 0:
-        return
-
-    tx_receipt = tx_receipts[0]
-    assert isinstance(tx_receipt, dict)
-    assert "effectiveGasPrice" in tx_receipt.keys()
-
-
-
-
-if __name__ == "__main__":
-    test_connector()
-    test_tx_list()
-    print("All tests passed.")

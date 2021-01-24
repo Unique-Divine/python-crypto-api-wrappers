@@ -1,3 +1,4 @@
+import os
 import time
 import logging
 import pandas as pd
@@ -5,9 +6,6 @@ import pandas as pd
 import requests
 
 from crypto_apis import eth
-from crypto_apis import secret_api_keys
-from token_bucket import limiter
-from token_bucket import storage
 from typing import Any, Dict, List, Optional, TypedDict, Union
 
 class TransactionReceipt(TypedDict):
@@ -36,7 +34,7 @@ class TransactionReceipt(TypedDict):
 class EtherscanConnector:
 
     api_endpoint_preamble = "https://api.etherscan.io/api?"
-    API_KEY = secret_api_keys.ETHERSCAN_API_KEY
+    API_KEY = os.environ['ETHERSCAN_API_KEY']
 
     # Needed to get the gas spent
     TRANSACTION_LIST_URL = api_endpoint_preamble + \
@@ -249,49 +247,3 @@ class EtherscanConnector:
                 f'Query failed and return code is {request.status_code}.{eth_daily_price_url}'
                 )
         return request.json()
-
-
-class _OnHoldEtherscanMethods:
-
-    def batch_get_gas_fees_for_transactions(self, transactions, max_api_calls_sec):
-        """
-
-        :param transactions:
-        :param max_api_calls_sec:
-        :return:
-        """
-        # ToDo: The token-bucket algo should probably be applied to the class itself since it is Thread-Safe
-        # and in that way, we can pass around this connector object to be used in a multi-threaded environment
-        # and not have to worry about blowing out the limits
-        # Since the token-bucket can have many keys, this could be adapted to maintain the buckets for all those diff
-        # api-keys and just round-robin through them.
-
-        assert max_api_calls_sec <= 30, "Requested calls per sec exceeds API limitations"
-        # Throttler is thread-safe, apparently.  Race condidtions are not of concern
-        # In-theory, this could be shoved into the api-query call itsefl and let that figure out if it has to wwait?
-        throttler = limiter.Limiter(rate=max_api_calls_sec, 
-                                    capacity=max_api_calls_sec, 
-                                    storage=storage.MemoryStorage())
-
-        for tx in transactions:
-            # ToDo: Consider keeping track of how long things might have to be waiting for a batch so we can
-
-            while throttler.consume(key=bytes(1)) is False:
-                # Attempt to consume until we have some capacity back
-                # First consumption that is valid will consume a token, and we'll break the loop
-                pass
-            tx_hash = tx["id"].split("#")[0]
-            gas_info = self.get_tx_gas_info(tx_hash)
-            gas_price, gas_used = gas_info.gas_price, gas_info.gas_used
-
-            if not any((gas_price, gas_used)):
-                logging.error(f"Nonetype found for either gas-price: {gas_price} or gas-used: {gas_used}.  Will skip"
-                              f"adding gas to this transaction: {tx}")
-                continue
-            tx['gas_price'] = gas_price
-            tx['gas_used'] = gas_used
-
-        return transactions
-
-    # Needed to get gasPrice at time of transaction
-    # TRANSACTION_DETAIL_URL = self.api_endpoint_preamble + "module=proxy&action=eth_getTransactionByHash&txhash={transaction_hash}&apikey={api_key}"

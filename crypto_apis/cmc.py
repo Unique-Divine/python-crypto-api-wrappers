@@ -6,15 +6,10 @@ Classes:
 """
 import requests
 from requests import exceptions
-import ratelimit
-import time
 import os
 import json
-import tenacity
 import logging
 from typing import Any, Dict, List, Optional, Sequence, Union
-
-from crypto_apis import secret_api_keys
 
 # https://pro-api.coinmarketcap.com/v1/cryptocurrency/map
 
@@ -25,10 +20,9 @@ class CoinMarketCapAPI:
         API_KEY (str)
     """
 
-    endpoint_preamble = "" # TODO
-    API_KEY: str = secret_api_keys.COINMARKETCAP_API_KEY 
+    endpoint_preamble: str = "" # TODO
+    API_KEY: str = os.environ["COINMARKETCAP_API_KEY"]
 
-    # @ratelimit.limits(calls=2, period=1) 
     def run_query(self, 
                   endpoint: str, 
                   params: Dict[str, str]) -> Union[list, dict]:
@@ -180,6 +174,3 @@ class CoinMarketCapEndpoint(str):
         url_components = [cls.preamble_v1, category, path]
         url = "/".join(url_components)
         return url
-    
-    
-        
