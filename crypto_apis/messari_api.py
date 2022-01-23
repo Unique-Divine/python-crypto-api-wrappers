@@ -1,18 +1,18 @@
 """Leverage the Messari Python API to get historical price data."""
-#%%
-import os, sys
-import requests
-import json
-import __init__
-import somm_airdrop
-from datetime import datetime
-from typing import Dict, Optional, Set, List, Union
 
+import os
+import requests
+import pandas as pd
+from typing import Dict, List, Union
 
 # TODO Clean up the script
 class MessariRequest:
     """Makes API call for daily prices (open, close, high, low, volume)."""
-    def __init__(self, symbols: Union[str, List[str]], start: str, end: str) -> None:
+
+    def __init__(self, 
+                 symbols: Union[str, List[str]], 
+                 start: str, 
+                 end: str) -> None:
         self.symbols = symbols
         self._make_symbols_a_list()
         self.pair_dir: str = os.path.join("data", self.pair) # TODO Change save location to make sense.
@@ -45,7 +45,9 @@ class MessariRequest:
             List[dict]: [description]
         """
 
-        # There's no API request. Use your code from notebook.py
+        raise NotImplementedError(
+            "There's no API request. Use your code from notebook.py"
+        )
         response: requests.Response = requests.get(url)
 
         if response.status_code == 200:
@@ -61,4 +63,5 @@ def main():
 
 if __name__ == "__main__":
     # main()
+    ...
 
