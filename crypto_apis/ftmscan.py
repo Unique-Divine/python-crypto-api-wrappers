@@ -10,8 +10,8 @@ from typing import Any, Dict, List, TypedDict, Union
 
 class FTMScanConnector:
 
-    api_endpoint_preamble = "https://api.ftmscan.com/api?"
-    API_KEY = os.environ["FTMSCAN_API_KEY"]
+    api_endpoint_preamble: str = "https://api.ftmscan.com/api?"
+    API_KEY: str = os.environ["FTMSCAN_API_KEY"]
 
     def __init__(self, max_api_calls_sec: int = 5):
         self._api_call_sleep_time = 1 / max_api_calls_sec
@@ -83,7 +83,7 @@ class TxReceipt(TypedDict):
     """An Ethereum (Fantom) transaction receipt from the Etherscan (FTMScan) API.
 
     Keys (value_type): 
-        effectiveGasPrice (int): Gas price at the time of the transaction. 
+        gasPrice (int): Gas price at the time of the transaction. 
             A base 16 encoded integer units of Wei.
         gasUsed (int): Gas usage by the transaction. A base 16 encoded integer
             in units of Wei. Thus, `int(gasUsed, base=16)` is an integer.  
