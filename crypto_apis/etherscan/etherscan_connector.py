@@ -6,29 +6,8 @@ import pandas as pd
 import requests
 
 from crypto_apis import eth
+from crypto_apis.etherscan import types
 from typing import Any, Dict, List, Optional, TypedDict, Union
-
-class TransactionReceipt(TypedDict):
-    """An Ethereum transaction receipt from the Etherscan API.
-
-    Keys (value_type): 
-        effectiveGasPrice (int): Gas price at the time of the transaction. 
-            A base 16 encoded integer units of Wei.
-        gasUsed (int): Gas usage by the transaction. A base 16 encoded integer
-            in units of Wei. Thus, `int(gasUsed, base=16)` is an integer.  
-        cumulativeGasUsed: int
-        from: Address the transaction was sent from.
-        to: 
-        blockHash: Any
-        blockNumber: Any
-        contractAddress: Any
-        logs: dict
-        logsBloom: Any
-        status: Any
-        transactionHash: Any 
-        transactionIndex: Any
-        type: Any
-    """
 
 
 class EtherscanConnector:
@@ -36,10 +15,6 @@ class EtherscanConnector:
     api_endpoint_preamble = "https://api.etherscan.io/api?"
     API_KEY = os.environ['ETHERSCAN_API_KEY']
 
-    # Needed to get the gas spent
-    TRANSACTION_LIST_URL = api_endpoint_preamble + \
-        "module=account&action=txlist&address={address}&sort=asc&apikey={api_key}"
-    
     def __init__(self, max_api_calls_sec: int = 30):
         self._api_call_sleep_time = 1 / max_api_calls_sec
 
@@ -89,7 +64,7 @@ class EtherscanConnector:
             # Raise so retry can retry
             raise
 
-    def get_tx_receipt(self, tx_hash: str) -> TransactionReceipt:
+    def get_tx_receipt(self, tx_hash: str) -> types.TxReceipt:
         tx_receipt_url = "".join([
             self.api_endpoint_preamble, "module=proxy", 
             "&action=eth_getTransactionReceipt", "&txhash={transaction_hash}", 
@@ -97,7 +72,7 @@ class EtherscanConnector:
 
         tx_receipt_query = tx_receipt_url.format(
             transaction_hash=tx_hash, api_key=self.API_KEY)
-        tx_receipt: TransactionReceipt = self.run_query(tx_receipt_query)
+        tx_receipt: types.TxReceipt = self.run_query(tx_receipt_query)
         return tx_receipt
 
     def get_event_log(self, address: str, topic0: str) -> Dict[str, Any]:
@@ -123,9 +98,14 @@ class EtherscanConnector:
             address=address, topic0=topic0, api_key=self.API_KEY)
         return self.run_query(event_log_query)
     
-    def get_normal_transactions(self, address: str):
-        query = self.TRANSACTION_LIST_URL.format(address=address, api_key=self.API_KEY)
-        return self.run_query(query)
+    def get_normal_transactions(self, address: str) -> List[types.NormalTx]:
+
+        api_key = self.API_KEY
+        tx_list_url: str = "".join([
+            self.api_endpoint_preamble, "module=account", 
+            f"&action=txlist&address={address}&", f"sort=asc&apikey={api_key}"])
+    
+        return self.run_query(query=tx_list_url)
 
     
     def get_contract_abi(self, address: str) -> dict:
@@ -216,7 +196,7 @@ class EtherscanConnector:
             "0x1e2910a262b1008d0616a0beb24c1a491d78771baa54a33e66065e03b1f46bc1"
         """
 
-        tx_receipt: TransactionReceipt = self.get_tx_receipt(tx_hash=tx_hash)
+        tx_receipt: types.TxReceipt = self.get_tx_receipt(tx_hash=tx_hash)
         gas_price_wei: int = int(tx_receipt["effectiveGasPrice"], base=16)
         gas_used_wei: int = int(tx_receipt["gasUsed"], base=16)
 
