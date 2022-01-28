@@ -1,13 +1,16 @@
 # crypto-apis
 
-You'll neeed to configure API keys in order to use various components of the repo. For now, this is done via the creation of a short Python file, `crypto_apis/secret_api_keys`, which must contain the following constants:
-```python
-# crypto_apis/secret_api_keys.py
+You'll need to add your API keys as environment variables in order to use different sections of the "crypto_apis" package. The package expects a `.env` file at the repo root to set each constant.
+
+```bash
+# Example .env file that needs to be created at the root of the repo:
 ETHERSCAN_API_KEY = ""
 COINMARKETCAP_API_KEY = ""
+MESSARI_API_KEY = ""
+FTMSCAN_API_KEY = ""
 ```
 
-You'll also need to configure your Messari API key inside of the package.
+TODO: `set_env_vars.py` or `set_env_vars.sh`: Write a script to create the .env file for the user.
 
 
 ## Messari
