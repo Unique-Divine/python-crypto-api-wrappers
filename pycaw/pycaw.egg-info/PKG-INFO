@@ -1,0 +1,48 @@
+Metadata-Version: 2.1
+Name: pycaw
+Version: 0.0.1
+Summary: A Python package for wrapping common Crypto APIs like Etherscan, Messari, CoinGecko, FTMscan Coin Market Cap, etc.
+Home-page: 
+Author: Unique Divine
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/Unique-Divine/python-crypto-api-wrappers/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# crypto-apis
+
+You'll need to add your API keys as environment variables in order to use different sections of the "crypto_apis" package. The package expects a `.env` file at the repo root to set each constant.
+
+```bash
+# Example .env file that needs to be created at the root of the repo:
+ETHERSCAN_API_KEY = ""
+COINMARKETCAP_API_KEY = ""
+MESSARI_API_KEY = ""
+FTMSCAN_API_KEY = ""
+```
+
+TODO: `set_env_vars.py` or `set_env_vars.sh`: Write a script to create the .env file for the user.
+
+
+## Messari
+
+Messari sub-section is forked from [messari/messari-python-api](https://github.com/messari/messari-python-api), the official Python client for the Messari API.
+
+Example notebooks:
+- [Messari API Tutorial.ipynb][messari-api-nb-example-nbviewer]
+- [DefiLlama API Tutorial.ipynb][defillama-nb-example-nbviewer]
+
+
+[defillama-nb-example]: https://github.com/messari/messari-python-api/blob/master/examples/notebooks/DeFiLlama%20API%20Tutorial.ipynb
+[defillama-nb-example-nbviewer]:https://nbviewer.jupyter.org/github/messari/messari-python-api/blob/master/examples/notebooks/DeFiLlama%20API%20Tutorial.ipynb
+
+[messari-api-nb-example]: https://github.com/messari/messari-python-api/blob/master/examples/notebooks/Messari%20API%20Tutorial.ipynb
+[messari-api-nb-example-nbviewer]: https://nbviewer.jupyter.org/github/messari/messari-python-api/blob/master/examples/notebooks/Messari%20API%20Tutorial.ipynb
+
+
+
