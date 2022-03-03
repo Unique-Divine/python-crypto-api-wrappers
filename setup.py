@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# Copyright Unique Divine
+#
 # setup.py
 import setuptools
 
@@ -17,16 +20,19 @@ setuptools.setup(
     ),
     url="",
     project_urls={
-        "Bug Tracker": f"https://github.com/Unique-Divine/{REPO_NAME}/issues"
+        "Bug Tracker": f"https://github.com/Unique-Divine/{REPO_NAME}/issues",
+        "Source Code": f"https://github.com/Unique-Divine/{REPO_NAME}",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent"
+        "Operating System :: OS Independent",
+        "Natural Language :: English",
     ],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    package_dir={"": SRC_NAME},
-    packages=setuptools.find_packages(where=SRC_NAME),
+    packages=setuptools.find_packages(exclude=["tests*"]),
+    include_package_data=True, 
     python_requires=">=3.9",
 )
