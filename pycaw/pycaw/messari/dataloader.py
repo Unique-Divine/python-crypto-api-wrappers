@@ -3,7 +3,7 @@
 
 from typing import List, Union, Dict
 import requests
-from crypto_apis.messari.utils import validate_input
+from pycaw.messari.utils import validate_input
 
 
 class DataLoader:

@@ -3,7 +3,7 @@
 import os
 import json
 import pytest
-from crypto_apis import cmc
+from pycaw import cmc
 from typing import Any, Dict, List, Union
 
 

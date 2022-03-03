@@ -5,9 +5,9 @@ import os
 import json
 import pytest
 
-from crypto_apis import eth
-from crypto_apis import etherscan
-from crypto_apis.etherscan.token_info_connector import TokenInfoMap, TokenID
+from pycaw import eth
+from pycaw import etherscan
+from pycaw.etherscan.token_info_connector import TokenInfoMap, TokenID
 
 from typing import Any, Dict, List, Optional, Union
 

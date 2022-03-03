@@ -6,7 +6,7 @@ import os
 import json
 import tenacity
 import logging
-from crypto_apis.etherscan import etherscan_connector
+from pycaw.etherscan import etherscan_connector
 
 TokenID = str
 TokenInfo = Dict[str, str]

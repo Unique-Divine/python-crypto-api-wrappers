@@ -1,10 +1,10 @@
-import crypto_apis
+import pycaw
 import pandas as pd
 from typing import List
 
 #%%  Price data 
 
-from crypto_apis.messari import messari_api
+from pycaw.messari import messari_api
 
 def prices_test_query():
     assets = ['btc', 'eth']

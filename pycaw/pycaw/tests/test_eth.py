@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # import __init__
 
-from crypto_apis import eth
+from pycaw import eth
 
 from typing import Any, Dict, List, Optional, Union
 

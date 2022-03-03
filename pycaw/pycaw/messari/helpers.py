@@ -5,7 +5,7 @@ import logging
 from typing import Union, List, Dict
 import pandas as pd
 
-from crypto_apis.messari.utils import validate_input, validate_asset_fields_list_order, find_and_update_asset_field
+from pycaw.messari.utils import validate_input, validate_asset_fields_list_order, find_and_update_asset_field
 
 
 def fields_payload(asset_fields: Union[str, List],

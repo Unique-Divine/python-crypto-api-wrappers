@@ -4,9 +4,9 @@ from string import Template
 from typing import Union, List, Dict
 import pandas as pd
 
-from crypto_apis.messari.dataloader import DataLoader
-from crypto_apis.messari.utils import validate_input, convert_flatten, unpack_list_of_dicts
-from crypto_apis.messari.helpers import fields_payload, timeseries_to_dataframe
+from pycaw.messari.dataloader import DataLoader
+from pycaw.messari.utils import validate_input, convert_flatten, unpack_list_of_dicts
+from pycaw.messari.helpers import fields_payload, timeseries_to_dataframe
 
 BASE_URL = 'https://data.messari.io/api/v1/assets'
 BASE_URL_V1 = 'https://data.messari.io/api/v1/assets'

@@ -2,4 +2,4 @@
 
 # https://github.com/messari/messari-python-api
 
-from crypto_apis.messari.messari_api import *
+from pycaw.messari.messari_api import *

@@ -1,4 +1,4 @@
-from crypto_apis import ftmscan
+from pycaw import ftmscan
 from typing import List
 import pytest
 

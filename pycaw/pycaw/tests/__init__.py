@@ -1,3 +1,3 @@
-"""Tests for the crypto_apis package."""
+"""Tests for the pycaw package."""
 import dotenv
 dotenv.load_dotenv()

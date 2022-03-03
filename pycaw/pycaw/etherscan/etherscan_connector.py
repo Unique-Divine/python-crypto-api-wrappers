@@ -5,8 +5,8 @@ import pandas as pd
 
 import requests
 
-from crypto_apis import eth
-from crypto_apis.etherscan import types
+from pycaw import eth
+from pycaw.etherscan import types
 from typing import Any, Dict, List, Optional, TypedDict, Union
 
 
