@@ -11,7 +11,7 @@ SRC_NAME: str = "pycaw"
 REPO_NAME: str = "python-crypto-api-wrappers"
 
 setuptools.setup(
-    name="pycaw",
+    name="python-caw",
     version="0.0.1",
     author="Unique Divine",
     description=(
