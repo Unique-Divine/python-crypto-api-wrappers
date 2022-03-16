@@ -26,12 +26,6 @@ class EtherscanConnector:
                                    timestamp: Union[int, str, pd.Timestamp]):
         raise NotImplementedError() # TODO
     
-    """
-    @tenacity.retry(stop=tenacity.stop_after_attempt(3), 
-                    wait=tenacity.wait_exponential(min=0.1, max=5, multiplier=2))
-    @ratelimit.sleep_and_retry
-    @ratelimit.limits(calls=30, period=1)  # period (float) is in seconds.
-    """
     def run_query(self, query: str, rate_limit: bool = True) -> Dict[str, Any]:
         """Func is wrapped with some ultimate limiters to ensure this method is 
         never callled too much.  However, the batch-call function should also 
