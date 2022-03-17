@@ -34,7 +34,7 @@ class DeFiLlama(dataloader.DataLoader):
         _endpoint_preamble: str = "https://api.llama.fi"
         urls = dict(
             # List all protocols on defillama along with their tvl
-            protcols="/".join([_endpoint_preamble, "protocols"]),
+            protocols="/".join([_endpoint_preamble, "protocols"]),
             # Get historical TVL of a protocol and breakdowns by token and chain
             get_protocol_tvl="/".join([_endpoint_preamble, "protocol", "{_slug}"]),
             # Get historical TVL on DeFi on all chains
