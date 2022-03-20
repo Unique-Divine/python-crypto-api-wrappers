@@ -1,0 +1,25 @@
+name: Tests and Code Coverage
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.10
+      - name: Initialize miniconda
+        # https://hub.docker.com/r/continuumio/miniconda3
+        uses: docker://contiuumio/miniconda3
+      # TODO: Use pip to install requirements instead of conda.
+      #- name: Install dependencies
+      #  run: pip install -r requirements.txt
+      - name: Test with pytest
+        run: pytest -v --cov tests/
+          
