@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-# import __init__
 
+import logging
 import os
 import json
 import pytest
 
 from pycaw import eth
 from pycaw import etherscan
-from pycaw.etherscan.token_info_connector import TokenInfoMap, TokenID
+from pycaw.etherscan.etherscan_connector import TokenInfoMap, TokenID
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 
 class TestEtherscanConnector:
@@ -44,36 +44,52 @@ class TestEtherscanConnector:
             assert gas_info.eth_price_usd is None
         assert gas_info.tx_hash
 
-
-class TestTokenInfoConnector:
-    @pytest.fixture
-    def connector(self) -> etherscan.TokenInfoConnector:
-        return etherscan.TokenInfoConnector()
-
-    def test_single_query(self, connector: etherscan.TokenInfoConnector):
+    def test_token_info_single_query(self, connector: etherscan.EtherscanConnector):
         token_id = "0x0e3a2a1f2146d86a604adc220b4967a898d7fe07"
-        token_info_map: TokenInfoMap = connector.get_token_info(token_ids=token_id)
-        assert isinstance(token_info_map, dict)
-        assert all([isinstance(token_id, TokenID) for token_id in token_info_map])
+        if connector.pro:
+            token_info_map: TokenInfoMap = connector.get_token_info(token_ids=token_id)
+            assert isinstance(token_info_map, dict)
+            assert all([isinstance(token_id, TokenID) for token_id in token_info_map])
+        else: 
+            with pytest.raises(Exception) as err:
+                token_info_map: TokenInfoMap = connector.get_token_info(token_ids=token_id)
+            assert "trying to access an API Pro endpoint" in str(err.value)
 
     @pytest.fixture
-    def token_info_map(self, connector: etherscan.TokenInfoConnector) -> TokenInfoMap:
+    def token_info_map(self, connector: etherscan.EtherscanConnector) -> TokenInfoMap:
         token_id_wbtc: str = "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
         token_id_card: str = "0x0e3a2a1f2146d86a604adc220b4967a898d7fe07"
         token_ids: List[str] = [token_id_wbtc, token_id_card]
 
-        token_info_map: TokenInfoMap = connector.get_token_info(token_ids=token_ids)
-        assert isinstance(token_info_map, dict)
-        assert all([isinstance(token_id, TokenID) for token_id in token_info_map])
+        token_info_map: TokenInfoMap
+        if connector.pro:
+            token_info_map: TokenInfoMap = connector.get_token_info(token_ids=token_ids)
+            assert isinstance(token_info_map, dict)
+            assert all([isinstance(token_id, TokenID) for token_id in token_info_map])
+        else:
+            with pytest.raises(Exception) as err:
+                token_info_map: TokenInfoMap = connector.get_token_info(token_ids=token_ids)
+            assert "trying to access an API Pro endpoint" in str(err.value)
+            token_info_map = {}
         return token_info_map
+        
 
     def test_save_token_info_json(
         self,
-        connector: etherscan.TokenInfoConnector,
+        connector: etherscan.EtherscanConnector,
         token_info_map: TokenInfoMap,
         save_dir: Optional[str] = None,
     ):
-        """l."""
+        """Tests the saving utility funciton for token info data."""
+
+        if not token_info_map:
+            logging.info(
+                f"skipped {__name__.__class__}.test_save_token_info_json "
+                "due to missing PRO API key", 
+            )
+            assert not connector.pro
+            return
+
         save_dir: str = "_test_temp"
         if not os.path.exists(save_dir):
             os.mkdir(save_dir)
