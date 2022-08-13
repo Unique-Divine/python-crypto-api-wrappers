@@ -1,4 +1,4 @@
-name: Tests and Code Coverage
+name: Pytests 🐍 
 
 on:
   push:
@@ -32,4 +32,5 @@ jobs:
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --no-interaction --no-root
     - name: Test with pytest
-      run: poetry run pytest -v --cov tests/ -p no:warnings
+      run: |
+        poetry run pytest --verbose -p no:warnings -k 'not DeFiLlama and not Messari'
