@@ -5,21 +5,31 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
-
+  tests:
+    runs-on: ubuntu-20.04  # ubuntu-latest
+    env:
+      ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.9.10
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9.10
-      - name: Initialize miniconda
-        # https://hub.docker.com/r/continuumio/miniconda3
-        uses: docker://contiuumio/miniconda3
-      # TODO: Use pip to install requirements instead of conda.
-      #- name: Install dependencies
-      #  run: pip install -r requirements.txt
-      - name: Test with pytest
-        run: pytest -v --cov tests/
-          
+    - name: Check out the repo
+      uses: actions/checkout@v3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9.13
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        installer-parallel: true
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v2
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+    - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: poetry install --no-interaction --no-root
+    - name: Test with pytest
+      run: poetry run pytest -v --cov tests/ -p no:warnings
